@@ -5,3 +5,8 @@
 #
 # Author: Ved Pradhan
 # Since:  December 31, 2021
+
+import json
+import matplotlib
+
+formula = input("\n\n\nWelcome to Molecule! Please enter a molecular formula: ")
