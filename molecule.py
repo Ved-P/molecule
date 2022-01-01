@@ -67,6 +67,11 @@ class Atom:
     def update_total_ve(self):
         self.total_ve = self.loose_ve + 2 * (self.sigma_bonds + self.pi_bonds)
 
+    # Returns essential information about the atom as a string.
+    def __str__(self):
+        return (self.element["name"] + ": " + str(self.loose_ve) + " loose, "
+        + str(self.sigma_bonds) + " sigma, " + str(self.pi_bonds) + " pi")
+
 # Retrieves the element corresponding to the given symbol.
 def get_element(symbol):
     for element in data["elements"]:
@@ -129,17 +134,17 @@ def check():
         noSupport()
 
 # Bonds two atoms together; updates in the object and the data structure.
-def bond(atom1, atom2, type)
+def bond(atom1, atom2, type):
     bonds.append((atom1, atom2, type))
-    if (type == "sigma")
+    if (type == "sigma"):
         atom1.sigma_bonds += 1
         atom2.sigma_bonds += 1
-    if (type == "pi")
+    if (type == "pi"):
         atom1.pi_bonds += 1
         atom2.pi_bonds += 1
 
 parse(formula)
 print(element_frequency)
 for a in atoms:
-    print(a.element["name"])
+    print(a)
 check()
