@@ -8,6 +8,7 @@
 
 import json
 import matplotlib
+import sys
 
 # Opens the JSON file for use.
 with open("elements.json", "r", encoding="utf8") as file:
@@ -17,18 +18,25 @@ with open("elements.json", "r", encoding="utf8") as file:
 formula = input("\n\n\nWelcome to Molecule! Please enter a molecular formula"
 + "(case sensitive): ")
 
+# A list to store each individual atom in the molecule.
+atoms = []
+
+# A dictionary to store each type of element and its frequency.
+element_frequency = {}
+
 # Class to represent each individual atom in the molecule.
 class Atom:
     def __init__(self, symbol):
         self.symbol = symbol
+        self.element = get_element(symbol)
+        if self.element != False:
+            self.enegativity = self.element["electronegativity_pauling"]
+            self.expected_ve = self.get_valence_electrons()
         self.loose_ve = -1
         self.sigma_bonds = -1
         self.pi_bonds = -1
         self.formal_charge = -1
         self.total_ve = -1
-        self.element = self.get_element()
-        self.enegativity = self.element["electronegativity_pauling"]
-        self.expected_ve = self.get_valence_electrons()
 
     # Returns the number of valence electrons the atom is expected to have.
     def get_valence_electrons(self):
@@ -54,3 +62,32 @@ def get_element(symbol):
     for element in data["elements"]:
         if element["symbol"] == symbol:
             return element
+    print("Error: Element '" + symbol + "' not found.\n\n\n")
+    return False
+
+# Parses through the inputted formula, splitting it into elements and frequencies.
+def parse(form):
+    i = 1
+    while i < len(form) and not(ord('A') <= ord(form[i]) <= ord('Z')):
+        i += 1
+    j = i - 1
+    while j >= 0 and ord('0') <= ord(form[j]) <= ord('9'):
+        j -= 1
+    if j < 0:
+        print("Error: The formula cannot start with a number.\n\n\n")
+        sys.exit()
+    symbol_part = form[:j+1]
+    number_part = form[j+1:i]
+    rest = form[i:]
+    ele = get_element(symbol_part)
+    if number_part == "":
+        number = 1
+    else:
+        number = int(number_part)
+    element_frequency[symbol_part] = number
+    for i in range(number):
+        atoms.append(Atom(symbol_part))
+    if len(rest) > 0:
+        parse(rest)
+
+parse(formula)
