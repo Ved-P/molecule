@@ -42,11 +42,11 @@ class Atom:
         if self.element != False:
             self.enegativity = self.element["electronegativity_pauling"]
             self.expected_ve = self.get_valence_electrons()
-        self.loose_ve = -1
-        self.sigma_bonds = -1
-        self.pi_bonds = -1
-        self.formal_charge = -1
-        self.total_ve = -1
+        self.loose_ve = 0
+        self.sigma_bonds = 0
+        self.pi_bonds = 0
+        self.formal_charge = 0
+        self.total_ve = 0
 
     # Returns the number of valence electrons the atom is expected to have.
     def get_valence_electrons(self):
@@ -100,7 +100,46 @@ def parse(form):
     if len(rest) > 0:
         parse(rest)
 
+# Prints a "not supported" message and quits the program.
+def noSupport():
+    print("Sorry, this molecule is not supported yet.\n\n\n")
+    sys.exit()
+
+# Checks if the molecule is supported.
+def check():
+    if len(element_frequency) != 2:
+        noSupport()
+    symb1 = list(element_frequency)[0]
+    symb2 = list(element_frequency)[1]
+    if symb1 == "H":
+        center = symb2
+        outer = symb1
+    elif symb2 == "H":
+        center = symb1
+        outer = symb2
+    elif get_element(symb1)["electronegativity_pauling"] < get_element(symb2)["electronegativity_pauling"]:
+        center = symb1
+        outer = symb2
+    elif get_element(symb1)["electronegativity_pauling"] > get_element(symb2)["electronegativity_pauling"]:
+        center = symb2
+        outer = symb1
+    else:
+        noSupport()
+    if element_frequency[center] != 1:
+        noSupport()
+
+# Bonds two atoms together; updates in the object and the data structure.
+def bond(atom1, atom2, type)
+    bonds.append((atom1, atom2, type))
+    if (type == "sigma")
+        atom1.sigma_bonds += 1
+        atom2.sigma_bonds += 1
+    if (type == "pi")
+        atom1.pi_bonds += 1
+        atom2.pi_bonds += 1
+
 parse(formula)
 print(element_frequency)
 for a in atoms:
     print(a.element["name"])
+check()
