@@ -7,8 +7,9 @@
 # Since:  December 31, 2021
 
 import json
-import matplotlib
+import matplotlib.pyplot as plt
 import sys
+import math
 
 # Opens the JSON file for use.
 with open("elements.json", "r", encoding="utf8") as file:
@@ -47,6 +48,8 @@ class Atom:
         self.pi_bonds = 0
         self.formal_charge = 0
         self.total_ve = 0
+        self.lewis_x = 0
+        self.lewis_y = 0
 
     # Returns the number of valence electrons the atom is expected to have.
     def get_valence_electrons(self):
@@ -152,7 +155,9 @@ def distribute():
         total_ve += a.expected_ve
     total_ve -= charge
     left_ve = total_ve
+    global centerAtom
     centerAtom = -1
+    global outerAtoms
     outerAtoms = []
     for a in atoms:
         if a.symbol == center:
@@ -176,10 +181,34 @@ def distribute():
     else:
         noSupport()
 
+# Draws the lewis diagram using matplotlib.
+def draw_lewis():
+    centerAtom.lewis_x = 0
+    centerAtom.lewis_y = 0
+    plt.style.use('_mpl-gallery')
+    fig, ax = plt.subplots()
+    fig.suptitle(formula, fontsize=14, fontweight='bold')
+    ax.text(0, 0, centerAtom.symbol, verticalalignment='center', horizontalalignment='center')
+    for i in range(len(outerAtoms)):
+        o = outerAtoms[i]
+        o.lewis_x = math.cos(2 * i * math.pi / len(outerAtoms))
+        o.lewis_y = math.sin(2 * i * math.pi / len(outerAtoms))
+        ax.text(o.lewis_x, o.lewis_y, o.symbol, verticalalignment='center', horizontalalignment='center')
+    for b in bonds:
+        plt.plot([b[0].lewis_x, b[1].lewis_x], [b[0].lewis_y, b[1].lewis_y], color='gray')
+    axes = plt.gca()
+    axes.set_aspect(1)
+    plt.xlim([-1.75, 1.75])
+    plt.ylim([-1.7, 1.8])
+    axes.axes.xaxis.set_visible(False)
+    axes.axes.yaxis.set_visible(False)
+    plt.show()
+
 parse(formula)
 check()
 distribute()
 print(element_frequency)
 for a in atoms:
     print(a)
+draw_lewis()
 print("\n\n\n")
