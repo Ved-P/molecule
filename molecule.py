@@ -13,6 +13,10 @@ import matplotlib
 with open("elements.json", "r", encoding="utf8") as file:
     data = json.load(file)
 
+# Gets the formula from the user.
+formula = input("\n\n\nWelcome to Molecule! Please enter a molecular formula"
++ "(case sensitive): ")
+
 # Class to represent each individual atom in the molecule.
 class Atom:
     def __init__(self, symbol):
@@ -25,12 +29,6 @@ class Atom:
         self.element = self.get_element()
         self.enegativity = self.element["electronegativity_pauling"]
         self.expected_ve = self.get_valence_electrons()
-
-    # Retrieves the element this atom corresponds to from the JSON file.
-    def get_element(self):
-        for element in data["elements"]:
-            if element["symbol"] == self.symbol:
-                return element
 
     # Returns the number of valence electrons the atom is expected to have.
     def get_valence_electrons(self):
@@ -51,6 +49,8 @@ class Atom:
     def update_total_ve(self):
         self.total_ve = self.loose_ve + 2 * (self.sigma_bonds + self.pi_bonds)
 
-# Gets the formula from the user.
-formula = input("\n\n\nWelcome to Molecule! Please enter a molecular formula"
-    + "(case sensitive): ")
+# Retrieves the element corresponding to the given symbol.
+def get_element(symbol):
+    for element in data["elements"]:
+        if element["symbol"] == symbol:
+            return element
