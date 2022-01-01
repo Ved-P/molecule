@@ -195,7 +195,11 @@ def draw_lewis():
         o.lewis_y = math.sin(2 * i * math.pi / len(outerAtoms))
         ax.text(o.lewis_x, o.lewis_y, o.symbol, verticalalignment='center', horizontalalignment='center')
     for b in bonds:
-        plt.plot([b[0].lewis_x, b[1].lewis_x], [b[0].lewis_y, b[1].lewis_y], color='gray')
+        x1 = (2 * b[0].lewis_x + b[1].lewis_x) / 3
+        x2 = (b[0].lewis_x + 2 * b[1].lewis_x) / 3
+        y1 = (2 * b[0].lewis_y + b[1].lewis_y) / 3
+        y2 = (b[0].lewis_y + 2 * b[1].lewis_y) / 3
+        plt.plot([x1, x2], [y1, y2], color='gray')
     axes = plt.gca()
     axes.set_aspect(1)
     plt.xlim([-1.75, 1.75])
