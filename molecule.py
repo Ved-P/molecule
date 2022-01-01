@@ -14,15 +14,25 @@ import sys
 with open("elements.json", "r", encoding="utf8") as file:
     data = json.load(file)
 
-# Gets the formula from the user.
-formula = input("\n\n\nWelcome to Molecule! Please enter a molecular formula"
+# Gets the formula and charge from the user.
+formula = input("\n\n\nWelcome to Molecule! Please enter a molecular formula "
 + "(case sensitive): ")
+temp = input("What is the charge of the molecule? Enter an integer (0 for no "
++ "charge): ")
+try:
+    charge = int(temp)
+except ValueError:
+    print("Error: '" + temp + "' is not a valid charge.\n\n\n")
+    sys.exit()
 
 # A list to store each individual atom in the molecule.
 atoms = []
 
 # A dictionary to store each type of element and its frequency.
 element_frequency = {}
+
+# A list to store the bonds between Atom objects.
+bonds = []
 
 # Class to represent each individual atom in the molecule.
 class Atom:
@@ -91,3 +101,6 @@ def parse(form):
         parse(rest)
 
 parse(formula)
+print(element_frequency)
+for a in atoms:
+    print(a.element["name"])
