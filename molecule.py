@@ -116,6 +116,8 @@ def check():
         noSupport()
     symb1 = list(element_frequency)[0]
     symb2 = list(element_frequency)[1]
+    global center
+    global outer
     if symb1 == "H":
         center = symb2
         outer = symb1
@@ -143,8 +145,41 @@ def bond(atom1, atom2, type):
         atom1.pi_bonds += 1
         atom2.pi_bonds += 1
 
+# Distributes the valence electrons as loose ones or through bonds.
+def distribute():
+    total_ve = 0
+    for a in atoms:
+        total_ve += a.expected_ve
+    total_ve -= charge
+    left_ve = total_ve
+    centerAtom = -1
+    outerAtoms = []
+    for a in atoms:
+        if a.symbol == center:
+            centerAtom = a
+        elif a.symbol == outer:
+            outerAtoms.append(a)
+    for o in outerAtoms:
+        bond(centerAtom, o, "sigma")
+        left_ve -= 2
+    want_ve = -1
+    if outer == "H" or outer == "He":
+        want_ve = 0
+    else:
+        want_ve = 6
+    if left_ve // len(outerAtoms) >= want_ve:
+        for o in outerAtoms:
+            o.loose_ve += want_ve
+            left_ve -= want_ve
+        if left_ve >= 0:
+            centerAtom.loose_ve += left_ve
+    else:
+        noSupport()
+
 parse(formula)
+check()
+distribute()
 print(element_frequency)
 for a in atoms:
     print(a)
-check()
+print("\n\n\n")
