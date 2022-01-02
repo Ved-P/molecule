@@ -200,6 +200,28 @@ def draw_lewis():
         y1 = (2 * b[0].lewis_y + b[1].lewis_y) / 3
         y2 = (b[0].lewis_y + 2 * b[1].lewis_y) / 3
         plt.plot([x1, x2], [y1, y2], color='gray')
+    for a in atoms:
+        x_shift = 0
+        y_shift = 0
+        for i in range(a.loose_ve):
+            if 0 <= i <= 1:
+                x_shift = -0.2
+            elif 2 <= i <= 3:
+                y_shift = -0.2
+            elif 4 <= i <= 5:
+                x_shift = 0.2
+            elif 6 <= i <= 7:
+                y_shift = 0.2
+            if i == 0 or i == 5:
+                y_shift = 0.05
+            elif i == 1 or i == 4:
+                y_shift = -0.05
+            elif i == 2 or i == 7:
+                x_shift = -0.05
+            elif i == 3 or i == 6:
+                x_shift = 0.05
+            ax.scatter(x = a.lewis_x + x_shift, y = a.lewis_y + y_shift + 0.03,
+            s = 4, color='black')
     axes = plt.gca()
     axes.set_aspect(1)
     plt.xlim([-1.75, 1.75])
